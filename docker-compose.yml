@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  python:
+    build: ./backend/python/
+    ports:
+      - 8000:8000
+    tty: true
+    volumes:
+      - ./backend/python/api:/app
+    depends_on:
+      - db
+  
+  db:
+    image: postgres:14.2
+    volumes: 
+      - ./db-store:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: passw0rd
+      TZ: "Asia/Tokyo"
