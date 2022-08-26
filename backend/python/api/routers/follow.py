@@ -8,11 +8,11 @@ from schemas.user import User
 
 router=APIRouter()
 
-dummy_follow=Follow(follow_by=0,follow_for=1,follow_at="2022-08-26 16:12:35")
+dummy_follow=Follow(follow_by=0,follow_for=1,follow_at=0)
 
 dummy_users=[
-    User(user_id=0,username="john",email="Foo@gmail.com",hashed_password="hashedpassword",created_at="2022-08-26 16:26:30"),
-    User(user_id=1,username="michel",email="Bar@gmail.com",hashed_password="hashedpassword",created_at="2022-08-26 16:26:30"),
+    User(user_id=0,username="john",email="Foo@gmail.com",hashed_password="hashedpassword",created_at=0),
+    User(user_id=1,username="michel",email="Bar@gmail.com",hashed_password="hashedpassword",created_at=0),
 ]
 
 @router.get("/follow/{user_id}/following", response_model=List[User])

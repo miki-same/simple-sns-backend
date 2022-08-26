@@ -8,7 +8,7 @@ class FollowBase(BaseModel):
     follow_for: int
 
 class Follow(FollowBase):
-    follow_at: datetime
+    follow_at: float
 
 class FollowCreate(FollowBase):
     pass

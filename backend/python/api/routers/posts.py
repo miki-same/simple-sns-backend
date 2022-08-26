@@ -9,7 +9,7 @@ from schemas.post import Post, PostCreate
 
 router=APIRouter()
 
-dummy_post=Post(post_id=0,message="fake post", reply_for=0, posted_at="2022-03-16 20:13:15",posted_by=3)
+dummy_post=Post(post_id=0,message="fake post", reply_for=0, posted_at=0,posted_by=3)
 
 @router.get("/posts", response_model=List[Post])
 def get_posts():

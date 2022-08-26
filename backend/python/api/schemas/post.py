@@ -10,7 +10,7 @@ class PostBase(BaseModel):
 
 class Post(PostBase):
     post_id: int
-    posted_at: datetime
+    posted_at: float
 
 class PostCreate(PostBase):
     pass

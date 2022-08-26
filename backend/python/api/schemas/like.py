@@ -8,7 +8,7 @@ class LikeBase(BaseModel):
 class Like(LikeBase):
     like_for: int
     like_id: int
-    like_at: datetime
+    like_at: float
 
 class LikeCreate(LikeBase):
     pass

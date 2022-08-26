@@ -9,7 +9,10 @@ class UserBase(BaseModel):
 
 class User(UserBase):
     user_id: int
-    created_at: datetime
+    created_at: float
+
+    class Config:
+        orm_mode=True
 
 class UserCreate(UserBase):
     pass
