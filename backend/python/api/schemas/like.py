@@ -10,5 +10,9 @@ class Like(LikeBase):
     like_id: int
     like_at: float
 
+class LikeResponse(Like):
+    class Config:
+        orm_mode=True
+
 class LikeCreate(LikeBase):
     pass

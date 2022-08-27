@@ -12,5 +12,11 @@ class Post(PostBase):
     post_id: int
     posted_at: float
 
+class PostResponse(Post):
+    pass
+
+    class Config:
+        orm_mode=True
+
 class PostCreate(PostBase):
     pass
