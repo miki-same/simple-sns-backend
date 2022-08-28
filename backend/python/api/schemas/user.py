@@ -26,3 +26,6 @@ class UserResponse(UserBase):
 class UserCreate(UserBase):
     email: Optional[str]
     hashed_password: str
+
+class UserRequest(UserBase):
+    user_id: int

@@ -9,6 +9,9 @@ sys.path.append('../')
 import models.post as post_model
 import schemas.post as post_schema
 
+import models.follow as follow_model
+import schemas.follow as follow_schema
+
 def get_all_posts(db: Session) -> List[post_model.Post]:
     posts=db.query(post_model.Post).all()
 
@@ -20,7 +23,15 @@ def get_one_post(db: Session, post_id: int) ->post_model.Post:
     return post
 
 def get_posts_by_following_user(db: Session, user_id: int) ->List[post_model.Post]:
-    pass
+    follows=db.query(follow_model.Follow)\
+        .filter(follow_model.Follow.follow_by==user_id)\
+            .all()
+    following_users=list(map(lambda follow:follow.follow_for, follows))
+    posts=db.query(post_model.Post)\
+        .filter(post_model.Post.posted_by.in_(following_users))\
+            .all()
+    
+    return posts
 
 def get_posts_by_user(db:Session, user_id: int) ->List[post_model.Post]:
     posts=db.query(post_model.Post).filter(post_model.Post.posted_by==user_id).all()

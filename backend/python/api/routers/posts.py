@@ -1,5 +1,7 @@
 import sys
 from this import d
+
+from schemas.user import UserRequest
 sys.path.append('../')
 
 from datetime import datetime
@@ -20,8 +22,8 @@ def list_posts(db=Depends(get_db)):
 
 #TODO:フォローしているユーザーの投稿を抽出する機能を作る
 @router.get("/posts/following", response_model=List[PostResponse])
-def list_posts_following():
-    return [dummy_post]
+def list_posts_following(user_id:int,db=Depends(get_db)):
+    return get_posts_by_following_user(db=db, user_id=user_id)
 
 @router.get("/posts/{user_id}", response_model=List[PostResponse])
 def list_posts_by_user(user_id:int, db=Depends(get_db)):

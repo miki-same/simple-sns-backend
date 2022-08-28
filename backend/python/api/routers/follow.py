@@ -1,32 +1,34 @@
 import sys
+
 sys.path.append('../')
 
 from typing import List
-from fastapi import APIRouter
-from schemas.follow import Follow, FollowCreate
-from schemas.user import User
+from fastapi import APIRouter,Depends
+from schemas.follow import Follow, FollowCreate, FollowResponse
+from schemas.user import User, UserResponse
+
+from db import get_db
+
+from cruds.follow import follow_a_user, get_all_followed_users, get_all_following_users, get_all_follows, unfollow_a_user
 
 router=APIRouter()
 
-dummy_follow=Follow(follow_by=0,follow_for=1,follow_at=0)
+@router.get("/follow", response_model=List[FollowResponse])
+def list_all_follows(db=Depends(get_db)):
+    return get_all_follows(db=db)
 
-dummy_users=[
-    User(user_id=0,username="john",email="Foo@gmail.com",hashed_password="hashedpassword",created_at=0),
-    User(user_id=1,username="michel",email="Bar@gmail.com",hashed_password="hashedpassword",created_at=0),
-]
+@router.get("/follow/{user_id}/following", response_model=List[UserResponse])
+def list_following_users(user_id:int,db=Depends(get_db)):
+    return get_all_following_users(db=db,user_id=user_id)
 
-@router.get("/follow/{user_id}/following", response_model=List[User])
-def get_following_users(user_id:int):
-    return dummy_users
+@router.get("/follow/{user_id}/followed", response_model=List[UserResponse])
+def list_followed_users(user_id:int, db=Depends(get_db)):
+    return get_all_followed_users(db=db, user_id=user_id)
 
-@router.get("/follow/{user_id}/followed")
-def get_followed_users(user_id:int):
-    return dummy_users
+@router.post("/follow/{user_id}", response_model=FollowResponse)
+def follow_user(user_id:int, follow_body: FollowCreate,db=Depends(get_db)):
+    return follow_a_user(db=db,follow_by=follow_body.follow_by ,follow_for=user_id)
 
-@router.post("/follow/{user_id}")
-def follow_user(user_id:int, follow_body: FollowCreate):
-    return Follow(follow_at="2022-08-26 16:50:00",**follow_body.dict())
-
-@router.delete("/follow/{user_id}")
-def unfollow_user(user_id:int):
-    return
+@router.delete("/follow/{user_id}", response_model=FollowResponse)
+def unfollow_user(user_id:int, follow_body: FollowCreate, db=Depends(get_db)):
+    return unfollow_a_user(db=db,follow_by=follow_body.follow_by ,follow_for=user_id)
