@@ -1,5 +1,5 @@
 from fastapi import FastAPI, File, UploadFile
-from routers import users,posts,likes,follow,search
+from routers import users,posts,likes,follow,search,security
 import shutil
 import os
 app=FastAPI()
@@ -9,6 +9,7 @@ app.include_router(posts.router)
 app.include_router(likes.router)
 app.include_router(follow.router)
 app.include_router(search.router)
+app.include_router(security.router)
 
 @app.get("/hello")
 def hello():
