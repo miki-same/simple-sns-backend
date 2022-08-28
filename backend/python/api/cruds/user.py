@@ -9,7 +9,7 @@ import models.user as user_model
 import schemas.user as user_schema
 
 def create_user(db:Session,user_create:user_schema.UserCreate) -> user_model.User:
-    same_name_user =db.query(user_model.User).filter(user_model.User.username==user_create.username).one()
+    same_name_user =db.query(user_model.User).filter(user_model.User.username==user_create.username).one_or_none()
     if same_name_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"user {user_create.username} is already exist")
     user=user_model.User(created_at=time.time(),**user_create.dict())
