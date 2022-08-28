@@ -24,8 +24,8 @@ class UserResponse(UserBase):
         orm_mode=True
 
 class UserCreate(UserBase):
-    email: Optional[str]
-    hashed_password: str
+    email: str
+    password: str
 
 class UserRequest(UserBase):
     user_id: int

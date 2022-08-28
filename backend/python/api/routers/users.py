@@ -12,11 +12,6 @@ from routers.security import get_current_user
 
 router=APIRouter()
 
-dummy_users=[
-    User(user_id=0,username="john",email="Foo@gmail.com",hashed_password="hashedpassword",created_at=0),
-    User(user_id=1,username="michel",email="Bar@gmail.com",hashed_password="hashedpassword",created_at=0),
-]
-
 @router.get("/users", response_model=List[UserResponse])
 def list_users(db=Depends(get_db)):
     return get_all_users(db=db)

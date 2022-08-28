@@ -8,11 +8,20 @@ sys.path.append('../')
 import models.user as user_model
 import schemas.user as user_schema
 
+from routers.security import get_password_hash
+
 def create_user(db:Session,user_create:user_schema.UserCreate) -> user_model.User:
     same_name_user =db.query(user_model.User).filter(user_model.User.username==user_create.username).one_or_none()
     if same_name_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"user {user_create.username} is already exist")
-    user=user_model.User(created_at=time.time(),**user_create.dict())
+    
+    user_create_dict={
+        "username":user_create.username,
+        "email":user_create.email,
+        "hashed_password": get_password_hash(user_create.password)
+    }
+
+    user=user_model.User(created_at=time.time(),**user_create_dict)
     db.add(user)
     db.commit()
     db.refresh(user)
