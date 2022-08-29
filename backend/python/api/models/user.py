@@ -12,5 +12,6 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(length=20))
     email = Column(String(200))
+    nickname = Column(String(50))
     hashed_password = Column(String(200))
     created_at = Column(Float)

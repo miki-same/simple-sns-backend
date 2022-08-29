@@ -9,6 +9,7 @@ from sqlalchemy.orm.session import Session
 import os
 from typing import Union, List
 from datetime import datetime, timedelta
+import re
 
 SECRET_KEY=os.environ.get("SECRET_KEY")
 ALGORITHM = "HS256"
@@ -55,9 +56,17 @@ def get_current_user(token: str = Depends(oauth2_scheme)) ->User:
         raise credentials_exception
     return user
 
+email_pattern=re.compile(r'[\w\-._]+@[\w\-._]+\.[A-Za-z]+')
+def is_email(username:str) ->bool:
+    return email_pattern.fullmatch(username) is not None
+
 #usernameとpasswordをDBと照合し、認証した場合ユーザークラスを返す 認証失敗した場合Falseを返す
 def authenticate_user(db:Session, username:str, password:str) ->Union[User,bool]:
-    user=db.query(User).filter(User.username==username).one_or_none()
+    if is_email(username):
+        user=db.query(User).filter(User.email==username).one_or_none()
+    else:
+        user=db.query(User).filter(User.username==username).one_or_none()
+
     if not user:
         return False
     if not verify_password(password,user.hashed_password):
