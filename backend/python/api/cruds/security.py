@@ -19,6 +19,24 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 pwd_context=CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
+username_pattern=re.compile(r'[\w_]+')
+email_pattern=re.compile(r'[\w\-\._]+@[\w\-\._]+\.[A-Za-z]+')
+password_pattern=re.compile(r'[\w(!\"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\\\]\^_`\{\|\}~)]+')
+
+def is_valid_name(name:str) ->bool:
+    return (1<=len(name) and len(name)<=20) and\
+        (username_pattern.fullmatch(name) is not None)
+def is_valid_email(email:str) ->bool:
+    return email_pattern.fullmatch(email) is not None
+
+def is_valid_nickname(nickname:str) ->bool:
+    return 1<=len(nickname) and len(nickname)<=30
+
+def is_valid_password(password:str) ->bool:
+    return  (8<=len(password) and len(password)<=50) and\
+         (password_pattern.fullmatch(password) is not None)
+
 #ユーザー名からユーザーを取得
 def get_user(username:str) ->User:
     db=get_db()
@@ -56,13 +74,9 @@ def get_current_user(token: str = Depends(oauth2_scheme)) ->User:
         raise credentials_exception
     return user
 
-email_pattern=re.compile(r'[\w\-._]+@[\w\-._]+\.[A-Za-z]+')
-def is_email(username:str) ->bool:
-    return email_pattern.fullmatch(username) is not None
-
 #usernameとpasswordをDBと照合し、認証した場合ユーザークラスを返す 認証失敗した場合Falseを返す
 def authenticate_user(db:Session, username:str, password:str) ->Union[User,bool]:
-    if is_email(username):
+    if is_valid_email(username):
         user=db.query(User).filter(User.email==username).one_or_none()
     else:
         user=db.query(User).filter(User.username==username).one_or_none()
