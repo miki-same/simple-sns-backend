@@ -7,7 +7,7 @@ from models.user import User
 from fastapi import Depends, FastAPI,APIRouter,HTTPException,status
 from sqlalchemy.orm.session import Session
 import os
-from typing import Union, List
+from typing import Dict, Union, List
 from datetime import datetime, timedelta
 import re
 
@@ -50,6 +50,25 @@ def verify_password(plain_password, hashed_password) ->bool:
 #平文パスワードのハッシュを返す
 def get_password_hash(password) ->str:
     return pwd_context.hash(password)
+
+#ログインしている場合のみ、Tokenからユーザーネームとidを取得する
+def get_current_username_and_id(token: str = Depends(oauth2_scheme)) -> Dict:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    try:
+        payload=jwt.decode(token,SECRET_KEY, algorithms=[ALGORITHM])
+        username: str=payload.get("sub")
+        user_id: int = payload.get("user_id")
+        if username is None or not user_id:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    
+    return {"username": username, "user_id": user_id}
 
 #ログインしている場合のみ、Tokenから自身のユーザーを取得する
 def get_current_user(token: str = Depends(oauth2_scheme)) ->User:

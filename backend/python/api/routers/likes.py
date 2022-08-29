@@ -1,6 +1,8 @@
 import sys
 
 from cruds.like import delete_like, get_all_likes_for_post, post_like, get_all_likes_by_user
+from cruds.security import get_current_username_and_id
+from typing import Dict
 sys.path.append('../')
 
 from typing import List
@@ -23,9 +25,9 @@ def list_likes_for_post(user_id:int, post_id:int, db=Depends(get_db)):
 
 
 @router.post("/likes/{user_id}/{post_id}", response_model=LikeResponse)
-def create_like_to_post(user_id:int,post_id:int, like_body:LikeCreate,db=Depends(get_db)):
-    return post_like(db=db, like_by=like_body.like_by, like_for=post_id)
+def create_like_to_post(user_id:int,post_id:int, db=Depends(get_db), userdata:Dict=Depends(get_current_username_and_id)):
+    return post_like(db=db, like_by=userdata.get("user_id"), like_for=post_id)
 
 @router.delete("/likes/{user_id}/{post_id}", response_model=LikeResponse)
-def delete_like_to_post(user_id:int,post_id:int,like_body:LikeCreate, db=Depends(get_db)):
-    return delete_like(db=db, like_by=like_body.like_by,like_for=post_id)
+def delete_like_to_post(user_id:int,post_id:int, db=Depends(get_db), userdata:Dict=Depends(get_current_username_and_id)):
+    return delete_like(db=db, like_by=userdata.get("user_id"),like_for=post_id)

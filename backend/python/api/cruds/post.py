@@ -19,7 +19,8 @@ def get_all_posts(db: Session) -> List[post_model.Post]:
 
 def get_one_post(db: Session, post_id: int) ->post_model.Post:
     post=db.query(post_model.Post).filter(post_model.Post.post_id==post_id).one_or_none()
-
+    if post is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="post doesn't exist")
     return post
 
 def get_posts_by_following_user(db: Session, user_id: int) ->List[post_model.Post]:

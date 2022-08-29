@@ -14,5 +14,5 @@ class LikeResponse(Like):
     class Config:
         orm_mode=True
 
-class LikeCreate(LikeBase):
-    pass
+class LikeCreate(BaseModel):
+    like_by: Optional[int]
