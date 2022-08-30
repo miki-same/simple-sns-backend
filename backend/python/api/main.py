@@ -1,7 +1,9 @@
+from cgitb import handler
 from fastapi import FastAPI, File, UploadFile
 from routers import users,posts,likes,follow,search,security
 import shutil
 import os
+from mangum import Mangum
 app=FastAPI()
 
 app.include_router(users.router)
@@ -31,3 +33,5 @@ def file_upload(file: UploadFile = File(None)):
         }
     
     return {"Detail": "File not uploaded"}
+
+handler=Mangum(app)
