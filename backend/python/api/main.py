@@ -33,5 +33,3 @@ def file_upload(file: UploadFile = File(None)):
         }
     
     return {"Detail": "File not uploaded"}
-
-handler=Mangum(app)
