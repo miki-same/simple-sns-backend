@@ -4,10 +4,17 @@ from routers import users,posts,likes,follow,search,security
 import shutil
 import os
 from mangum import Mangum
-app=FastAPI(
-    openapi_url='/openapi.json',
-    root_path="/dev/" #api gatewayのstage名に合わせる Swagger UI利用のため
-    )
+from setting import Settings
+
+settings=Settings()
+
+if settings.CONFIG=='production':
+    app=FastAPI(
+        openapi_url='/openapi.json',
+        root_path="/dev/" #api gatewayのstage名に合わせる Swagger UI利用のため
+        )   
+else:
+    app=FastAPI()
 
 app.include_router(users.router)
 app.include_router(posts.router)
