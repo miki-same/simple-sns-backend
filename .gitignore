@@ -1,2 +1,4 @@
 /db-store
 /backend/python/api/.env
+/backend/python/api/lambda.Dockerfile
+/backend/python/api/local.Dockerfile
