@@ -2,3 +2,4 @@
 /backend/python/api/.env
 /backend/python/lambda.Dockerfile
 /backend/python/local.Dockerfile
+/backend/python/cloudrun.Dockerfile

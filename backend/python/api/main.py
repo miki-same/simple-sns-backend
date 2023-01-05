@@ -5,6 +5,7 @@ import shutil
 import os
 from mangum import Mangum
 from setting import Settings
+from fastapi.middleware.cors import CORSMiddleware
 
 settings=Settings()
 
@@ -15,6 +16,18 @@ if settings.CONFIG=='production':
         )   
 else:
     app=FastAPI()
+
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.include_router(users.router)
 app.include_router(posts.router)
