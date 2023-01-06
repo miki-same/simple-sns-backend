@@ -12,8 +12,24 @@ import schemas.post as post_schema
 import models.follow as follow_model
 import schemas.follow as follow_schema
 
+import models.user as user_model
+
 def get_all_posts(db: Session) -> List[post_model.Post]:
     posts=db.query(post_model.Post).all()
+
+    return posts
+
+def get_all_posts_with_name(db: Session):
+    posts=db.query(
+    post_model.Post,
+    post_model.Post.message,
+    post_model.Post.post_id,
+    post_model.Post.posted_at,
+    post_model.Post.posted_by,
+    user_model.User.username
+    ).join(
+        user_model.User, user_model.User.user_id==post_model.Post.posted_by
+    ).all()
 
     return posts
 
@@ -22,6 +38,7 @@ def get_one_post(db: Session, post_id: int) ->post_model.Post:
     if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="post doesn't exist")
     return post
+
 
 def get_posts_by_following_user(db: Session, user_id: int) ->List[post_model.Post]:
     follows=db.query(follow_model.Follow)\

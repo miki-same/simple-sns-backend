@@ -18,5 +18,14 @@ class PostResponse(Post):
     class Config:
         orm_mode=True
 
+class PostWithName(Post):
+    username: str
+
+class PostResponseWithName(PostWithName):
+    pass
+
+    class Config:
+        orm_mode=True
+
 class PostCreate(PostBase):
     posted_by: Optional[int]
